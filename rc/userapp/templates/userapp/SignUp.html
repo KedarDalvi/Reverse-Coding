@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SignUp Page</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+ <h1>SignUp Page</h1>
+    {% if message %}
+    <h1>{{ message }}</h1>
+    {% endif %}
+    <fieldset>
+        <form method = 'POST' action = '{% url "signup" %}'>
+            {% csrf_token %}
+            <table>
+                <tr>
+                    <td>Username :</td>
+                    <td><input type = 'text' name = 'username' id = 'username' autocomplete="off" required></td>
+                </tr>
+                <tr>
+                    <td><div id='message1'></div></td>
+                </tr>
+                <tr>
+                    <td>First Name :</td>
+                    <td><input type = 'text' name = 'first_name' id = 'first_name' autocomplete="off" required></td>
+                </tr>
+                <tr>
+                    <td><div id='message2'></div></td>
+                </tr>
+                <tr>
+                <td>Last Name :</td>
+                    <td><input type = 'text' name = 'last_name' id = 'last_name' autocomplete="off" required></td>
+                </tr>
+                <tr>
+                    <td><div id='message3'></div></td>
+                </tr>
+                <tr>
+                    <td>Email :</td>
+                    <td><input type = 'email' name = 'email' id = 'email' autocomplete="off" required></td>
+                </tr>
+                <tr>
+                    <td><div id='message4'></div></td>
+                </tr>
+                <tr>
+                    <td>Category :</td>
+                    <td><select name="category" >
+                        <option value="FE">FE</option>
+                        <option value="SE">SE</option>
+                        <option value="TE">TE</option>
+                        <option value="BE">BE</option>
+                        </select></td>
+                </tr>
+                <tr>
+                    <td>Phone number :</td>
+			<td> <input name="phone" maxlength="10" pattern="\d{10}"  class="form-control" type="text"
+                        title="You can enter only 10 digits..." id = 'phone' autocomplete="off" required>
+			</td>
+                </tr>
+                <tr>
+                    <td><div id='message5'></div></td>
+                </tr>
+                <tr>
+                    <td>Password :</td>
+                    <td><input type = 'password' name = 'f_pass' id = 'f_pass' required></td>
+                </tr>
+                <tr>
+                    <td>Confirm Password :</td>
+                    <td><input type = 'password' name = 'c_pass' id = 'c_pass' required></td>
+                </tr>
+                 <tr>
+                    <td><div id='message6'></div></td>
+                </tr>
+            </table>
+            <input type = 'submit' value = 'Submit' name = 'Submit' id = 'submit'>
+        </form>
+    </fieldset>
+    <a href = '{% url "signin" %}'>Already a member? SignIn Here</a><br><br>
+    <a href = '{% url "emergencylogin" %}'>EmergencyLogin</a><br><br>
+1. Length of the Username must be 6-32 characters.<br>
+2. Username can contain _ , - , . <br>
+3. Username must not start or end with _ , - , . <br>
+4. Username cannot contain consecutive _ , - , . <br>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('input#username').keyup(function() {
+                let name = $(this).val();
+                $.ajax({
+                    method: 'GET',
+                    url: 'signup_validation/',
+                    dataType: 'json',
+                    data : {
+                        'name':name
+                    },
+                    success: function(data, name) {
+                        if(data.found) {
+                            $('#message1').html("<h10 style='color:red;'>Username Unavailable</h10>");
+                            $('#submit').prop("disabled", true);
+                           }
+                        else {
+                           $('#message1').html("<h10 style='color:green;'>Username Available</h10>");
+                           $('#submit').prop("disabled", false);
+                        }
+                    },
+                    timeout: 2000
+                });
+            });
+            $("input#first_name").keyup(function() {
+                if ($(this).val().match('^[a-zA-Z]{0,16}$')) {
+                    $('#message2').html("");
+                    $('#submit').prop("disabled", false);
+                } else {
+                $('#message2').html("<h10 style='color:red;'>Enter a valid First name.</h10>");
+                $('#submit').prop("disabled", true);
+            }
+        });
+            $('input#last_name').keyup(function() {
+                if ( $(this).val().match('^[a-zA-Z]{0,16}$') ) {
+                    $('#message3').html("");
+                    $('#submit').prop("disabled", false);
+                } else {
+                $('#message3').html("<h10 style='color:red;'>Enter a valid Last name.</h10>");
+                $('#submit').prop("disabled", true);
+            }
+        });
+            $('input#phone').keyup(function() {
+                if ( $(this).val().match('^[6789][0-9]{9}')) {
+                    $('#message5').html("");
+                    $('#submit').prop("disabled", false);
+                } else {
+                $('#message5').html("<h10 style='color:red;'>Enter a valid Phone number.</h10>");
+                $('#submit').prop("disabled", true);
+            }
+        });
+             $('input#c_pass').keyup(function() {
+             var password = $("#f_pass").val();
+                if ( $(this).val() == password ) {
+                    $('#message6').html("");
+                    $('#submit').prop("disabled", false);
+                } else {
+                $('#message6').html("<h10 style='color:red;'>Passwords don't match.</h10>");
+                $('#submit').prop("disabled", true);
+            }
+        });
+    });
+    </script>
+</body>
+</html>

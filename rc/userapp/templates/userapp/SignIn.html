@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SignIn Page</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+<h1>SignIn Page</h1>
+{% if message %}
+<h1>{{ message }}</h1>
+{% endif %}
+{% if score %}
+<h1>Your final score is {{ score }}</h1>
+{% endif %}
+<fieldset>
+    <form method = 'POST' action = '{% url "signin" %}'>
+        {% csrf_token %}
+        <table>
+            <tr>
+                <td>Username :</td>
+                <td><input type = 'text' name = 'username' id = "username" autocomplete="off" required></td>
+            </tr>
+            <tr>
+                <td><div id='message1'></div></td>
+            </tr>
+            <tr>
+                <td>Password : </td>
+                <td> <input type = 'password' name = 'password' required></td>
+            </tr>
+            <tr>
+                <td><input type = 'submit' name = 'Submit' value = 'Submit' id = 'submit'></td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+<a href = '{% url "signup" %}'>SignUp Here</a>
+<script>
+        $(document).ready(function() {
+            $('input#username').keyup(function() {
+                let name = $(this).val();
+                $.ajax({
+                    method: 'GET',
+                    url: 'signin_validation/',
+                    dataType: 'json',
+                    data : {
+                        'name':name
+                    },
+                    success: function(data) {
+                        if(data.is_same) {
+                            $('#message1').html("<h10 style='color:green;'>User Found</h10>");
+                            $('#submit').prop("disabled", false);
+                        } else {
+                            $('#message1').html("<h10 style='color:red;'>User Not Found</h10>");
+                            $('#submit').prop("disabled", true);
+                        }
+                    },
+                    timeout: 2000
+                });
+
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Emergency Login</title>
+</head>
+<body>
+<h1>Emergency Login</h1>
+    {% if message %}
+    <h1>{{ message }}</h1>
+    {% endif %}
+    <fieldset>
+        <form method = 'POST' action = '{% url "emergencylogin" %}'>
+            {% csrf_token %}
+            <table>
+                <tr>
+                    <td>Superuser :</td>
+                    <td><input type = 'text' name = 'super_username' required></td>
+                </tr>
+                <tr>
+                    <td>SuperUser Password :</td>
+                    <td><input type = 'password' name = 'super_password' required></td>
+                </tr>
+                <tr>
+                    <td>Participant Username :</td>
+                    <td><input type = 'text' name = 'username' required></td>
+                </tr>
+                <tr>
+                    <td>Password :</td>
+                    <td><input type = 'password' name = 'password' required></td>
+                </tr>
+                <tr>
+                    <td>Time to be allotted(in seconds) :</td>
+                    <td><input type = 'number' name = 'time'></td>
+                </tr>
+            </table>
+            <input type = 'submit' value = 'Submit' name = 'Submit'>
+        </form>
+    </fieldset>
+<a href = '{% url "signin" %}'>SignIn Here</a>
+</body>
+</html>
